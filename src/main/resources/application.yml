@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: stream-processor
+
+kafka:
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  topics:
+    page-views: page_views
+    ad-clicks: ad_clicks
+  consumer:
+    group-id: stream-processor-group
+    concurrency: 3  # Number of concurrent consumer threads (one per partition)
+
+# Output Configuration
+output:
+  database:
+    path: ./output/attributed_page_views.db
+
+# Watermark Configuration
+# Set to 4 minutes (under the README's max of 15) so the data_generator's user_2 scenario
+# (click 3 minutes out of order in event time) is admitted. With L=2, the page-view's
+# watermark advance would push the partition watermark past click_2's event_time and
+# drop it as too late. L=4 keeps user_2 attributable while still dropping user_5's
+# 5-minute-late click.
+watermark:
+  allowed-lateness-minutes: 4
+
+# Attribution Configuration
+attribution:
+  window-minutes: 30
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.mercedes.streamprocessor: DEBUG
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: ./logs/stream-processor.log

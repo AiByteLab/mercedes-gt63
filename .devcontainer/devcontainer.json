@@ -1,0 +1,31 @@
+{
+  "name": "Data Engineering Challenge",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  "containerEnv": {
+    "JAVA_HOME": "/usr/lib/jvm/java-21-openjdk-amd64",
+    "MAVEN_HOME": "/usr/share/maven"
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-maven"
+      ]
+    }
+  },
+
+  "postCreateCommand": "pip install -r requirements.txt",
+
+  "postStartCommand": "sudo chmod 666 /var/run/docker.sock",
+
+  "remoteUser": "vscode"
+}

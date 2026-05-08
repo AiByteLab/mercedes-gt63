@@ -1,0 +1,18 @@
+.venv
+target/
+*.log
+*.pyc
+__pycache__/
+.idea/
+.vscode/
+.DS_Store
+tmp/
+CLAUDE.md
+
+# Runtime artifacts (NOT the Java source package src/main/java/.../output/)
+/output/
+/logs/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
